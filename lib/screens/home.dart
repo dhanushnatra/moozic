@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:moozic/components/AudioProvider.dart';
+import 'package:moozic/components/AudioProvider.dart';
 import 'package:saavnapi/saavnapi.dart';
+import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -9,6 +12,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  final AudioController audioController = Get.put(AudioController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,10 +36,9 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.green, size: 37),
             onPressed: () {
-              Navigator.pushNamed(context, '/settings');
+              print("settings");
             },
           ),
-
           SizedBox(width: 16),
         ],
       ),
@@ -37,25 +46,51 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             SizedBox(height: 40),
-            Align(
+            Container(
               alignment: Alignment.centerLeft,
-              child: Text("Trending Playlists"),
+              margin: const EdgeInsets.only(left: 20),
+              child: Text(
+                "Trending Playlists",
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
             ),
-            Container(height: 200, child: buildPlaylistList()),
-            Align(
+            SizedBox(height: 200, child: buildPlaylistList()),
+            Container(
               alignment: Alignment.centerLeft,
-              child: Text("trending Albums"),
+              margin: const EdgeInsets.only(left: 20),
+              child: Text(
+                "Trending Albums",
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
             ),
             SizedBox(height: 200, child: buildAlbumsList()),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Trending Songs"),
-                IconButton(
-                  onPressed: () => print("pressed play trending"),
-                  icon: Icon(Icons.play_circle_filled_sharp),
-                ),
-              ],
+            Container(
+              alignment: Alignment.centerLeft,
+              margin: const EdgeInsets.only(left: 20, right: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Trending Songs",
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      print("play all");
+                    },
+                    child: Row(
+                      children: [
+                        Text("play all"),
+                        Icon(
+                          Icons.play_circle_filled_sharp,
+                          color: Colors.green,
+                          size: 30,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
             SizedBox(child: buildSongsList()),
           ],
@@ -121,7 +156,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget buildAlbumTile(Album album) {
     return Container(
       width: 150,
-
       margin: const EdgeInsets.all(8.0),
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
@@ -130,7 +164,6 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(30),
       ),
       child: Column(
-        spacing: 8,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ClipRRect(
@@ -164,13 +197,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        spacing: 8,
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(30),
             child: Image.network(playlist.imageUrl),
           ),
-
           Text(
             playlist.title,
             maxLines: 1,
@@ -216,7 +247,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget buildSongTile(Song song) {
     return ListTile(
-      title: Text(song.title, style: TextStyle(color: Colors.green)),
+      onTap: () {
+        audioController.playTrack(song.url, song.title);
+        print("playing ${song.title}");
+      },
+      title: Text(song.title, style: TextStyle(color: Colors.green.shade500)),
       subtitle: Text(song.artist),
       leading: Container(
         decoration: BoxDecoration(border: Border.all(color: Colors.green)),

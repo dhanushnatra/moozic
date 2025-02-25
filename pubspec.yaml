@@ -41,6 +41,8 @@ dependencies:
   provider: ^6.1.2
   rxdart: ^0.28.0
   curved_navigation_bar: ^1.0.6
+  audio_service: ^0.18.17
+  get: ^4.6.6
 
 dev_dependencies:
   flutter_test:

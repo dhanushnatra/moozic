@@ -1,30 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:saavnapi/saavnapi.dart';
 
 class MusicScreen extends StatefulWidget {
-  final Song song;
-  const MusicScreen({super.key, required this.song});
+  const MusicScreen({super.key});
 
   @override
   State<MusicScreen> createState() => _MusicScreenState();
 }
 
 class _MusicScreenState extends State<MusicScreen> {
+  double streamloc = 0.0;
+  onchanged(value) {
+    setState(() {
+      streamloc = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Music",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 30,
-            color: Colors.green,
-          ),
-        ),
-        centerTitle: true,
-      ),
-      body: Center(child: Text("Music")),
+    return StreamBuilder(
+      stream: Stream<int>.periodic(
+        const Duration(seconds: 1),
+        (count) => count,
+      ).take(100),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Slider(
+            value: snapshot.data!.toDouble(),
+            onChanged: (value) => onchanged(value),
+          );
+        } else {
+          return const CircularProgressIndicator();
+        }
+      },
     );
   }
 }
