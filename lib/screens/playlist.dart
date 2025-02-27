@@ -30,13 +30,27 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         child: Column(
           children: [
             const SizedBox(height: 20),
-
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                widget.playlist.imageUrl,
-                height: 200,
-                width: 200,
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[200], // Background color
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+                backgroundBlendMode: BlendMode.darken,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  widget.playlist.imageUrl,
+                  height: 200,
+                  width: 200,
+                ),
               ),
             ),
             const SizedBox(height: 20),

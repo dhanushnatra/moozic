@@ -71,7 +71,6 @@ class _SearchScreenState extends State<SearchScreen>
                         ],
                         indicatorColor: Colors.green,
                         labelColor: Colors.green,
-                        unselectedLabelColor: Colors.white,
                       ),
                       SizedBox(height: 10),
                       Expanded(
@@ -98,19 +97,18 @@ class _SearchScreenState extends State<SearchScreen>
   Widget buildSearchBar() {
     return Container(
       padding: const EdgeInsets.all(10),
-      child: TextField(
+      child: SearchBar(
         controller: _controller,
         onSubmitted: (value) => onsubmit(),
-        decoration: InputDecoration(
-          hintText: "Search",
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide.none,
+        hintText: "Search",
+        textStyle: MaterialStateProperty.all(TextStyle(color: Colors.white)),
+        trailing: [
+          IconButton(
+            icon: Icon(Icons.search, color: Colors.white),
+            onPressed: () => onsubmit(),
           ),
-          filled: true,
-          fillColor: Colors.green.shade900,
-          prefixIcon: const Icon(Icons.search),
-        ),
+        ],
+        backgroundColor: MaterialStateProperty.all(Colors.green.shade900),
       ),
     );
   }
@@ -210,10 +208,9 @@ class _SearchScreenState extends State<SearchScreen>
 
   Widget albumtile(Album album) {
     return ListTile(
-      title: Text(album.title, style: TextStyle(color: Colors.green.shade500)),
+      title: Text(album.title),
       subtitle: Text(album.title),
       leading: Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.green)),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Image.network(album.imageUrl),
@@ -243,27 +240,11 @@ class _SearchScreenState extends State<SearchScreen>
     );
   }
 
-  Widget songAlert() {
-    return AlertDialog(
-      title: Text("Song"),
-      content: Text("Song"),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text("Close"),
-        ),
-      ],
-    );
-  }
-
   Widget songtile(Song song) {
     return ListTile(
-      title: Text(song.title, style: TextStyle(color: Colors.green.shade500)),
+      title: Text(song.title),
       subtitle: Text(song.artist),
       leading: Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.green)),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Image.network(song.imageUrl),
@@ -274,17 +255,14 @@ class _SearchScreenState extends State<SearchScreen>
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           IconButton(
-            icon: Icon(
-              Icons.favorite_border_outlined,
-              color: Colors.green.shade500,
-            ),
+            icon: Icon(Icons.favorite_border_outlined),
             onPressed: () {
               // audioController.playTrack(song.url, song.title);
               print("adding to fav ${song.title}");
             },
           ),
           IconButton(
-            icon: Icon(Icons.more_vert_rounded, color: Colors.green.shade500),
+            icon: Icon(Icons.more_vert_rounded),
             onPressed: () {
               // audioController.playTrack(song.url, song.title);
               final RenderBox overlay =
@@ -299,10 +277,7 @@ class _SearchScreenState extends State<SearchScreen>
                         ListTile(
                           title: Text("Add to Playlist"),
                           onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => songAlert(),
-                            );
+                            print("adding to playlist ${song.title}");
                           },
                         ),
                         ListTile(
@@ -327,8 +302,6 @@ class _SearchScreenState extends State<SearchScreen>
           ),
         ],
       ),
-      onLongPress:
-          () => showDialog(context: context, builder: (context) => songAlert()),
       onTap: () {
         // audioController.playTrack(song.url, song.title);
         print("playing ${song.title}");

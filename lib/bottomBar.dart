@@ -33,7 +33,7 @@ class BottomNavBar extends StatelessWidget {
         index: bottomNavController.selectedIndex.value,
         onTap: (index) => bottomNavController.changeTab(index),
         animationCurve: Curves.easeInOut,
-        animationDuration: const Duration(milliseconds: 300),
+        animationDuration: const Duration(milliseconds: 320),
         items: const [
           Icon(Icons.home, size: 30, color: Colors.white),
           Icon(Icons.search, size: 30, color: Colors.white),

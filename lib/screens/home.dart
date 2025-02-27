@@ -1,24 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:moozic/screens/playlist.dart';
-import 'package:moozic/components/AudioProvider.dart';
+import 'package:moozic/components/audio_controller.dart';
 import 'package:saavnapi/saavnapi.dart';
 import 'package:get/get.dart';
+import 'package:moozic/screens/music.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class HomeScreen extends StatelessWidget {
   final AudioController audioController = Get.put(AudioController());
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -258,12 +246,16 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget buildSongTile(Song song) {
     return ListTile(
       onTap: () {
+        Get.to(
+          () => MusicScreen(song: song),
+          transition: Transition.rightToLeft,
+          duration: const Duration(milliseconds: 500),
+        );
         print("playing ${song.title}");
       },
-      title: Text(song.title, style: TextStyle(color: Colors.green.shade500)),
+      title: Text(song.title),
       subtitle: Text(song.artist),
       leading: Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.green)),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Image.network(song.imageUrl),
