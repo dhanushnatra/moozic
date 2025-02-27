@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moozic/components/AudioProvider.dart';
+import 'package:moozic/screens/playlist.dart';
 import 'package:moozic/components/AudioProvider.dart';
 import 'package:saavnapi/saavnapi.dart';
 import 'package:get/get.dart';
@@ -186,33 +186,43 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget buildPlaylistTile(Playlist playlist) {
-    return Container(
-      width: 150,
-      margin: const EdgeInsets.all(8.0),
-      padding: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 45, 80, 41),
-        border: Border.all(color: Colors.green),
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(30),
-            child: Image.network(playlist.imageUrl),
-          ),
-          Text(
-            playlist.title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
-              color: Colors.white70,
+    return GestureDetector(
+      onTap: () {
+        Get.to(
+          () => PlaylistScreen(playlist: playlist),
+          transition: Transition.rightToLeft,
+          duration: const Duration(milliseconds: 500),
+        );
+        print("playing ${playlist.title}");
+      },
+      child: Container(
+        width: 150,
+        margin: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 45, 80, 41),
+          border: Border.all(color: Colors.green),
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: Image.network(playlist.imageUrl),
             ),
-          ),
-        ],
+            Text(
+              playlist.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: Colors.white70,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -248,7 +258,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget buildSongTile(Song song) {
     return ListTile(
       onTap: () {
-        audioController.playTrack(song.url, song.title);
         print("playing ${song.title}");
       },
       title: Text(song.title, style: TextStyle(color: Colors.green.shade500)),

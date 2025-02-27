@@ -1,47 +1,67 @@
 import 'package:get/get.dart';
-import 'package:audio_service/audio_service.dart';
-import 'package:moozic/components/audio_player.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 
 class AudioController extends GetxController {
-  late MyAudioHandler _audioHandler;
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
   var isPlaying = false.obs;
-  var currentTrackTitle = "No Track".obs;
+  var position = Rx<Duration>(Duration.zero);
+  var duration = Rx<Duration>(Duration.zero);
 
   @override
   void onInit() {
     super.onInit();
-    
+
+    // Listen to audio position changes
+    _audioPlayer.positionStream.listen((p) {
+      position.value = p;
+    });
+
+    // Listen to duration changes
+    _audioPlayer.durationStream.listen((d) {
+      if (d != null) duration.value = d;
+    });
+
+    // Listen to player state
+    _audioPlayer.playerStateStream.listen((state) {
+      isPlaying.value = state.playing;
+    });
   }
 
-  Future<void> _initAudioService() async {
-    _audioHandler = await AudioService.init(
-      builder: () => MyAudioHandler(),
-      config: const AudioServiceConfig(
-        androidNotificationChannelId: 'com.example.music',
-        androidNotificationChannelName: 'Music Playback',
-        androidNotificationOngoing: true,
+  Future<void> setAudio(String url, String title, String artist, String imageUrl) async {
+    await _audioPlayer.setAudioSource(
+      AudioSource.uri(
+        Uri.parse(url),
+        tag: MediaItem(
+          id: url,
+          title: title,
+          artist: artist,
+          artUri: Uri.parse(imageUrl),
+        ),
       ),
     );
   }
 
-  Future<void> playTrack(String url, String title) async {
-    currentTrackTitle.value = title;
-    await _audioHandler.playTrack(url);
-    isPlaying.value = true;
+  Future<void> play() async {
+    await _audioPlayer.play();
   }
 
-  void togglePlayPause() {
-    if (isPlaying.value) {
-      _audioHandler.pause();
-      isPlaying.value = false;
-    } else {
-      _audioHandler.play();
-      isPlaying.value = true;
-    }
+  Future<void> pause() async {
+    await _audioPlayer.pause();
   }
 
-  void stop() {
-    _audioHandler.stop();
-    isPlaying.value = false;
+  Future<void> stop() async {
+    await _audioPlayer.stop();
+  }
+
+  Future<void> seek(Duration position) async {
+    await _audioPlayer.seek(position);
+  }
+
+  @override
+  void onClose() {
+    _audioPlayer.dispose();
+    super.onClose();
   }
 }
