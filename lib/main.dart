@@ -1,22 +1,8 @@
-import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:moozic/bottomBar.dart';
-import 'package:just_audio_background/just_audio_background.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await AudioService.init(
-    builder: () => Audio,
-    config: const AudioServiceConfig(
-      androidNotificationChannelName: 'Audio Service Demo',
-      androidNotificationColor: 0xFF2196F3,
-      androidShowNotificationBadge: true,
-      androidStopForegroundOnPause: true,
-    ),
-  );
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   final BottomNavController bottomNavController = Get.put(
@@ -25,6 +11,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Initialize Just Audio Background
+
     return GetMaterialApp(
       themeMode: ThemeMode.system,
       theme: ThemeData.light(),

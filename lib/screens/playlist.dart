@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:moozic/bottomBar.dart';
 import 'package:saavnapi/saavnapi.dart';
 
-class PlaylistScreen extends StatefulWidget {
+class PlaylistScreen extends StatelessWidget {
   final Playlist playlist;
   const PlaylistScreen({super.key, required this.playlist});
 
-  @override
-  State<PlaylistScreen> createState() => _PlaylistScreenState();
-}
-
-class _PlaylistScreenState extends State<PlaylistScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +40,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Image.network(
-                  widget.playlist.imageUrl,
+                  playlist.imageUrl,
                   height: 200,
                   width: 200,
                 ),
@@ -55,12 +48,12 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
             ),
             const SizedBox(height: 20),
             Text(
-              widget.playlist.title,
+              playlist.title,
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
             const SizedBox(height: 20),
-            buildPlaylistList(widget.playlist),
+            buildPlaylistList(playlist),
           ],
         ),
       ),

@@ -101,14 +101,14 @@ class _SearchScreenState extends State<SearchScreen>
         controller: _controller,
         onSubmitted: (value) => onsubmit(),
         hintText: "Search",
-        textStyle: MaterialStateProperty.all(TextStyle(color: Colors.white)),
+        textStyle: WidgetStateProperty.all(TextStyle(color: Colors.white)),
         trailing: [
           IconButton(
             icon: Icon(Icons.search, color: Colors.white),
             onPressed: () => onsubmit(),
           ),
         ],
-        backgroundColor: MaterialStateProperty.all(Colors.green.shade900),
+        backgroundColor: WidgetStateProperty.all(Colors.green.shade900),
       ),
     );
   }
@@ -270,7 +270,7 @@ class _SearchScreenState extends State<SearchScreen>
               showModalBottomSheet(
                 context: context,
                 builder: (context) {
-                  return Container(
+                  return SizedBox(
                     height: 200,
                     child: Column(
                       children: [

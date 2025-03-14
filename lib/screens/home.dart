@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:moozic/screens/playlist.dart';
 import 'package:moozic/components/audio_controller.dart';
+import 'package:moozic/screens/playlist.dart';
 import 'package:saavnapi/saavnapi.dart';
 import 'package:get/get.dart';
-import 'package:moozic/screens/music.dart';
 
 class HomeScreen extends StatelessWidget {
   final AudioController audioController = Get.put(AudioController());
+  HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -245,14 +246,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget buildSongTile(Song song) {
     return ListTile(
-      onTap: () {
-        Get.to(
-          () => MusicScreen(song: song),
-          transition: Transition.rightToLeft,
-          duration: const Duration(milliseconds: 500),
-        );
-        print("playing ${song.title}");
-      },
+      onTap: () => audioController.play(song.url),
       title: Text(song.title),
       subtitle: Text(song.artist),
       leading: Container(
