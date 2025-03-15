@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moozic/components/audio_controller.dart';
+import 'package:moozic/screens/music.dart';
 import 'package:moozic/screens/playlist.dart';
 import 'package:saavnapi/saavnapi.dart';
 import 'package:get/get.dart';
@@ -55,30 +56,10 @@ class HomeScreen extends StatelessWidget {
             SizedBox(height: 200, child: buildAlbumsList()),
             Container(
               alignment: Alignment.centerLeft,
-              margin: const EdgeInsets.only(left: 20, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Trending Songs",
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      print("play all");
-                    },
-                    child: Row(
-                      children: [
-                        Text("play all"),
-                        Icon(
-                          Icons.play_circle_filled_sharp,
-                          color: Colors.green,
-                          size: 30,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              margin: const EdgeInsets.only(left: 20),
+              child: Text(
+                "Trending Songs",
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(child: buildSongsList()),
@@ -246,7 +227,12 @@ class HomeScreen extends StatelessWidget {
 
   Widget buildSongTile(Song song) {
     return ListTile(
-      onTap: () => audioController.play(song.url),
+      onTap:
+          () => Get.to(
+            () => MusicScreen(song: song),
+            transition: Transition.rightToLeft,
+            duration: const Duration(milliseconds: 500),
+          ),
       title: Text(song.title),
       subtitle: Text(song.artist),
       leading: Container(

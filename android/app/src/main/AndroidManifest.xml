@@ -1,10 +1,19 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+<uses-permission android:name="android.permission.WAKE_LOCK"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+  <!-- ALSO ADD THIS PERMISSION IF TARGETING SDK 34 -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
+  <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL"/>
+  <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"/>
+  <uses-permission android:name="android.permission.BIND_MEDIA_SESSION"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
      <application
          android:label="moozic"
          android:name="${applicationName}"
-         android:icon="@mipmap/ic_launcher">
+         android:icon="@mipmap/ic_launcher"
+         android:enableOnBackInvokedCallback="true">
          <activity
-             android:name=".MainActivity"
+             android:name="com.ryanheise.audioservice.AudioServiceActivity"
              android:exported="true"
              android:launchMode="singleTop"
              android:taskAffinity=""
@@ -31,6 +40,21 @@
          <meta-data
              android:name="flutterEmbedding"
              android:value="2" />
+             <service android:name="com.ryanheise.audioservice.AudioService"
+        android:foregroundServiceType="mediaPlayback"
+        android:exported="true" tools:ignore="Instantiatable">
+      <intent-filter>
+        <action android:name="android.media.browse.MediaBrowserService" />
+      </intent-filter>
+    </service>
+
+    <!-- ADD THIS "RECEIVER" element -->
+    <receiver android:name="com.ryanheise.audioservice.MediaButtonReceiver"
+        android:exported="true" tools:ignore="Instantiatable">
+      <intent-filter>
+        <action android:name="android.intent.action.MEDIA_BUTTON" />
+      </intent-filter>
+    </receiver> 
      </application>
      <!-- Required to query activities that can process text, see:
           https://developer.android.com/training/package-visibility and

@@ -274,7 +274,11 @@ class _SearchScreenState extends State<SearchScreen>
         ],
       ),
       onTap: () {
-        Get.to(() => MusicScreen(song: song));
+        Get.to(
+          () => MusicScreen(song: song),
+          transition: Transition.rightToLeft,
+          duration: const Duration(milliseconds: 500),
+        );
         print("playing ${song.title}");
       },
     );
