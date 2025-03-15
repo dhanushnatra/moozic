@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:moozic/screens/music.dart';
 import 'package:saavnapi/saavnapi.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -265,45 +267,14 @@ class _SearchScreenState extends State<SearchScreen>
             icon: Icon(Icons.more_vert_rounded),
             onPressed: () {
               // audioController.playTrack(song.url, song.title);
-              final RenderBox overlay =
-                  Overlay.of(context).context.findRenderObject() as RenderBox;
-              showModalBottomSheet(
-                context: context,
-                builder: (context) {
-                  return SizedBox(
-                    height: 200,
-                    child: Column(
-                      children: [
-                        ListTile(
-                          title: Text("Add to Playlist"),
-                          onTap: () {
-                            print("adding to playlist ${song.title}");
-                          },
-                        ),
-                        ListTile(
-                          title: Text("Share"),
-                          onTap: () {
-                            print("sharing ${song.title}");
-                          },
-                        ),
-                        ListTile(
-                          title: Text("More"),
-                          onTap: () {
-                            print("more ${song.title}");
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              );
+
               print("more ${song.title}");
             },
           ),
         ],
       ),
       onTap: () {
-        // audioController.playTrack(song.url, song.title);
+        Get.to(() => MusicScreen(song: song));
         print("playing ${song.title}");
       },
     );

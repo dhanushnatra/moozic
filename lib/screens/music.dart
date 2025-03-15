@@ -6,11 +6,13 @@ import 'package:saavnapi/saavnapi.dart' show Song;
 class MusicScreen extends StatelessWidget {
   final Song song;
   const MusicScreen({super.key, required this.song});
+
   @override
   Widget build(BuildContext context) {
     AudioController audioController = Get.put(AudioController());
-    return Obx(() {
-      return StreamBuilder<Object>(
+    return Scaffold(
+      appBar: AppBar(title: Text(song.title)),
+      body: StreamBuilder<Object>(
         stream: audioController.positionStream,
         initialData: const Duration(),
         builder: (context, snapshot) {
@@ -22,26 +24,30 @@ class MusicScreen extends StatelessWidget {
             return Column(
               children: [
                 Text(song.title, style: TextStyle(fontSize: 12.2)),
-                IconButton(
-                  icon: Icon(
-                    audioController.isPlaying.value
-                        ? Icons.pause
-                        : Icons.play_arrow,
+                Image(image: NetworkImage(song.imageUrl)),
+                Obx(
+                  () => IconButton(
+                    icon: Icon(
+                      audioController.isPlaying.value
+                          ? Icons.pause
+                          : Icons.play_arrow,
+                    ),
+                    iconSize: 64.0,
+                    onPressed: () {
+                      if (audioController.isPlaying.value) {
+                        audioController.pause();
+                      } else {
+                        print("calling play");
+                        audioController.play(song.url);
+                      }
+                    },
                   ),
-                  iconSize: 64.0,
-                  onPressed: () {
-                    if (audioController.isPlaying.value) {
-                      audioController.pause();
-                    } else {
-                      audioController.play(song.url);
-                    }
-                  },
                 ),
               ],
             );
           }
         },
-      );
-    });
+      ),
+    );
   }
 }

@@ -9,6 +9,7 @@ class AudioController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    audioPlayer.load();
     audioPlayer.playingStream.listen((isPlaying) {
       this.isPlaying.value = isPlaying;
     });
