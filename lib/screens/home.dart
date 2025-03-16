@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
-  final AudioController audioController = Get.find<AudioController>();
+  final AudioController audioController = Get.put(AudioController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
