@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:moozic/screens/music.dart';
+import 'package:moozic/components/audio_controller.dart';
 import 'package:saavnapi/saavnapi.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -15,11 +15,17 @@ class _SearchScreenState extends State<SearchScreen>
   final TextEditingController _controller = TextEditingController();
   bool submit = false;
   late TabController _tabController;
-
+  late AudioController audioController;
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) {
+        tabchange(_tabController.index);
+      }
+    });
+    AudioController audioController = Get.put(AudioController());
   }
 
   void tabchange(int index) {
@@ -274,11 +280,8 @@ class _SearchScreenState extends State<SearchScreen>
         ],
       ),
       onTap: () {
-        Get.to(
-          () => MusicScreen(song: song),
-          transition: Transition.rightToLeft,
-          duration: const Duration(milliseconds: 500),
-        );
+        audioController.addSongtoQueue(song);
+        audioController.playNext();
         print("playing ${song.title}");
       },
     );

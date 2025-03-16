@@ -13,9 +13,8 @@ class MyApp extends StatelessWidget {
   final BottomNavController bottomNavController = Get.put(
     BottomNavController(),
   );
-
+  final AudioController audioController = Get.put(AudioController());
   void playsong() {
-    final audioController = Get.put(AudioController());
     audioController.addSongtoQueue(
       Song(
         id: "Vv39UvCz",
@@ -42,7 +41,12 @@ class MyApp extends StatelessWidget {
       darkTheme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        bottomNavigationBar: const BottomNavBar(),
+        bottomNavigationBar: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [BottomPlayer(), BottomNavBar()],
+        ),
         body: Obx(
           () => IndexedStack(
             index: bottomNavController.selectedIndex.value,

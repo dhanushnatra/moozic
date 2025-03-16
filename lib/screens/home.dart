@@ -227,12 +227,11 @@ class HomeScreen extends StatelessWidget {
 
   Widget buildSongTile(Song song) {
     return ListTile(
-      onTap:
-          () => Get.to(
-            () => MusicScreen(song: song),
-            transition: Transition.rightToLeft,
-            duration: const Duration(milliseconds: 500),
-          ),
+      onTap: () {
+        audioController.addSongtoQueue(song);
+        print("playing ${audioController.songQueue}");
+        audioController.playNext();
+      },
       title: Text(song.title),
       subtitle: Text(song.artist),
       leading: Container(

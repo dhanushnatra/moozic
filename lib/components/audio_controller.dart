@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:saavnapi/saavnapi.dart';
@@ -7,29 +6,21 @@ part 'changer.dart';
 
 class AudioController extends GetxController {
   AudioPlayer audioPlayer = AudioPlayer();
-
-  final Queue<AudioSource> _queue = Queue<AudioSource>();
-  ConcatenatingAudioSource get concatenatingAudioSource {
-    return ConcatenatingAudioSource(children: _queue.toList());
-  }
-
-  void setplayerSource(Queue<AudioSource> q) {
-    audioPlayer.setAudioSource(ConcatenatingAudioSource(children: q.toList()));
-  }
-
-  RxBool isPlaying = false.obs;
+  final RxList<Song> songQueue = <Song>[].obs;
+  final RxInt currentIndex = 0.obs;
+  final RxBool isPlaying = false.obs;
+  final RxBool isShuffled = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     audioPlayer.playerStateStream.listen((state) {
-      if (state.playing) {
-        isPlaying.value = true;
-      } else {
-        isPlaying.value = false;
-      }
-      update();
+      isPlaying.value = state.playing;
     });
+    audioPlayer.currentIndexStream.listen((index) {
+      currentIndex.value = index ?? 0;
+    });
+    audioPlayer.printError();
   }
 
   @override
@@ -38,90 +29,89 @@ class AudioController extends GetxController {
     super.onClose();
   }
 
-  void playNext() {
-    if (_queue.isNotEmpty) {
-      _queue.removeFirst();
-      if (_queue.isNotEmpty) {
-        audioPlayer.setAudioSource(_queue.first);
-        audioPlayer.play();
-      }
-    }
-  }
-
-  void playPrevious() {
-    if (_queue.isNotEmpty) {
-      _queue.removeLast();
-      if (_queue.isNotEmpty) {
-        audioPlayer.setAudioSource(_queue.last);
-        audioPlayer.play();
-      }
-    }
-  }
-
-  void playPause() {
-    if (audioPlayer.playing) {
-      audioPlayer.pause();
+  void playNext() async {
+    if (isShuffled.value) {
+      currentIndex.value = (currentIndex.value + 1) % songQueue.length;
     } else {
-      audioPlayer.play();
+      currentIndex.value = (currentIndex.value + 1) % songQueue.length;
     }
+    await audioPlayer.seek(Duration.zero, index: currentIndex.value);
+    await audioPlayer.play();
   }
 
-  void stop() {
-    audioPlayer.stop();
-  }
-
-  void seekToNext() {
-    if (_queue.isNotEmpty) {
-      audioPlayer.seekToNext();
+  void playPrevious() async {
+    if (isShuffled.value) {
+      currentIndex.value = (currentIndex.value - 1) % songQueue.length;
+    } else {
+      currentIndex.value = (currentIndex.value - 1) % songQueue.length;
     }
+    await audioPlayer.seek(Duration.zero, index: currentIndex.value);
+    await audioPlayer.play();
   }
 
-  void seekToPrevious() {
-    if (_queue.isNotEmpty) {
-      audioPlayer.seekToPrevious();
+  void playSong(int index) async {
+    currentIndex.value = index;
+    await audioPlayer.seek(Duration.zero, index: index);
+    await audioPlayer.play();
+  }
+
+  void playPause() async {
+    if (isPlaying.value) {
+      await audioPlayer.pause();
+    } else {
+      await audioPlayer.play();
     }
-  }
-
-  void addPlaylistToQueue(PlaylistWithSongs playlist) {
-    _queue.clear();
-    _queue.addAll(playlistToAudio(playlist));
-    setplayerSource(_queue);
-    audioPlayer.play();
-  }
-
-  void addAlbumToQueue(AlbumWithSongs album) {
-    _queue.clear();
-    _queue.addAll(albumToAudio(album));
-    setplayerSource(_queue);
-    audioPlayer.play();
-  }
-
-  void addArtistToQueue(ArtistWithSongs artist) {
-    _queue.clear();
-    _queue.addAll(artistToAudio(artist));
-    setplayerSource(_queue);
-    audioPlayer.play();
-  }
-
-  void addSongsToQueue(Songs songs) {
-    _queue.addAll(songstoAudio(songs));
-    setplayerSource(_queue);
-    audioPlayer.play();
   }
 
   void addSongtoQueue(Song song) {
-    _queue.add(songToAudio(song));
-    setplayerSource(_queue);
-    audioPlayer.play();
+    if (songQueue.isEmpty) {
+      songQueue.add(song);
+      playSong(0);
+    } else {
+      songQueue.clear();
+      songQueue.add(song);
+      playSong(0);
+    }
   }
 
-  void removeSongFromQueue(Song song) {
-    _queue.remove(songToAudio(song));
-    setplayerSource(_queue);
+  void removeSongFromQueue(int index) {
+    songQueue.removeAt(index);
   }
 
   void clearQueue() {
-    _queue.clear();
-    setplayerSource(_queue);
+    songQueue.clear();
+  }
+
+  void AddSongsToQueue(Songs songs) {
+    songQueue.addAll(songs.songs);
+  }
+
+  void AddPLaylistToQueue(PlaylistWithSongs playlist) {
+    songQueue.addAll(playlist.songs.songs);
+  }
+
+  void shuffleQueue() {
+    isShuffled.value = !isShuffled.value;
+    if (isShuffled.value) {
+      songQueue.shuffle();
+    } else {
+      songQueue.sort((a, b) => a.title.compareTo(b.title));
+    }
+  }
+
+  void seekTo(Duration position) async {
+    await audioPlayer.seek(position);
+  }
+
+  void seekToSeconds(int seconds) async {
+    await audioPlayer.seek(Duration(seconds: seconds));
+  }
+
+  void AddAlbumToQueue(AlbumWithSongs album) {
+    songQueue.addAll(album.songs.songs);
+  }
+
+  void AddArtistToQueue(ArtistWithSongs artist) {
+    songQueue.addAll(artist.songs.songs);
   }
 }

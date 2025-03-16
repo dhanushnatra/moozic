@@ -4,31 +4,44 @@ import 'package:get/get.dart';
 import 'package:moozic/components/audio_controller.dart';
 
 class MusicScreen extends StatelessWidget {
-  final Song song;
-  final AudioController audioController = Get.put(AudioController());
-
-  MusicScreen({super.key, required this.song});
+  MusicScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final AudioController audioController = Get.put(AudioController());
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.network(song.imageUrl),
-            Text(song.title),
-            Text(song.artist),
-            ElevatedButton(
+            Obx(() {
+              final song =
+                  audioController.songQueue.isNotEmpty
+                      ? audioController.songQueue.first
+                      : null;
+              if (song == null) {
+                return Text("No song playing");
+              }
+              return Column(
+                children: [
+                  Image.network(song.imageUrl),
+                  Text(song.title, style: TextStyle(fontSize: 24)),
+                  Text(song.artist, style: TextStyle(fontSize: 18)),
+                ],
+              );
+            }),
+            IconButton(
               onPressed: () {
-                audioController.addSongtoQueue(song);
-                audioController.playPause();
                 print("Song added to queue");
+                audioController.playPause();
               },
-              child: Obx(
-                () => Text(
-                  audioController.isPlaying.value ? "Pause" : "Play",
-                  style: TextStyle(fontSize: 20),
+
+              icon: Obx(
+                () => Icon(
+                  audioController.isPlaying.value
+                      ? Icons.pause
+                      : Icons.play_arrow,
+                  size: 50,
                 ),
               ),
             ),

@@ -39,11 +39,11 @@ dependencies:
   
   # just_audio_platform_interface:
   #   path: ../just_audio_platform_interface
-  permission_handler: ^11.4.0
   just_audio: ^0.9.46 
   get: ^4.6.6
   curved_navigation_bar: ^1.0.6
-  just_audio_background : any
+  just_audio_background: ^0.0.1-beta.11
+
   
 
 dev_dependencies:
