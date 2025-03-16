@@ -42,7 +42,7 @@ dependencies:
   just_audio: ^0.9.46 
   get: ^4.6.6
   curved_navigation_bar: ^1.0.6
-  just_audio_background: ^0.0.1-beta.11
+  audio_service: ^0.18.17
 
   
 

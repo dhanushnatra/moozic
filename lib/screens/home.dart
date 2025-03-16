@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:moozic/components/audio_controller.dart';
-import 'package:moozic/screens/music.dart';
 import 'package:moozic/screens/playlist.dart';
 import 'package:saavnapi/saavnapi.dart';
 import 'package:get/get.dart';
 
 class HomeScreen extends StatelessWidget {
-  final AudioController audioController = Get.put(AudioController());
   HomeScreen({super.key});
-
+  final AudioController audioController = Get.find<AudioController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -229,8 +227,6 @@ class HomeScreen extends StatelessWidget {
     return ListTile(
       onTap: () {
         audioController.addSongtoQueue(song);
-        print("playing ${audioController.songQueue}");
-        audioController.playNext();
       },
       title: Text(song.title),
       subtitle: Text(song.artist),

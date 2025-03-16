@@ -9,27 +9,15 @@ class MusicScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AudioController audioController = Get.put(AudioController());
+    Song song = audioController.songQueue.first;
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Obx(() {
-              final song =
-                  audioController.songQueue.isNotEmpty
-                      ? audioController.songQueue.first
-                      : null;
-              if (song == null) {
-                return Text("No song playing");
-              }
-              return Column(
-                children: [
-                  Image.network(song.imageUrl),
-                  Text(song.title, style: TextStyle(fontSize: 24)),
-                  Text(song.artist, style: TextStyle(fontSize: 18)),
-                ],
-              );
-            }),
+            Image.network(song.imageUrl),
+            Text(song.title, style: TextStyle(fontSize: 24)),
+            Text(song.artist, style: TextStyle(fontSize: 18)),
             IconButton(
               onPressed: () {
                 print("Song added to queue");

@@ -15,17 +15,11 @@ class _SearchScreenState extends State<SearchScreen>
   final TextEditingController _controller = TextEditingController();
   bool submit = false;
   late TabController _tabController;
-  late AudioController audioController;
+  final AudioController audioController = Get.put(AudioController());
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-    _tabController.addListener(() {
-      if (_tabController.indexIsChanging) {
-        tabchange(_tabController.index);
-      }
-    });
-    AudioController audioController = Get.put(AudioController());
   }
 
   void tabchange(int index) {
@@ -281,7 +275,7 @@ class _SearchScreenState extends State<SearchScreen>
       ),
       onTap: () {
         audioController.addSongtoQueue(song);
-        audioController.playNext();
+        audioController.playPause();
         print("playing ${song.title}");
       },
     );
