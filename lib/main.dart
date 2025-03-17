@@ -8,10 +8,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final BottomNavController bottomNavController = Get.put(
-    BottomNavController(),
-  );
-
+  MyApp({super.key});
+  final BottomNavController controller = Get.put(BottomNavController());
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -26,8 +24,8 @@ class MyApp extends StatelessWidget {
         ),
         body: Obx(
           () => IndexedStack(
-            index: bottomNavController.selectedIndex.value,
-            children: bottomNavController.screens,
+            index: controller.selectedIndex.value,
+            children: controller.screens,
           ),
         ),
       ),

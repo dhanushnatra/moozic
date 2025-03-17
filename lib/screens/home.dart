@@ -5,8 +5,8 @@ import 'package:saavnapi/saavnapi.dart';
 import 'package:get/get.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
   final AudioController audioController = Get.put(AudioController());
+  HomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(

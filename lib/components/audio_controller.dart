@@ -11,6 +11,17 @@ class AudioController extends GetxController {
   final RxBool isPlaying = false.obs;
   final RxBool isShuffled = false.obs;
 
+  setAudioSource() {
+    if (songQueue.isNotEmpty) {
+      print("Setting audio source");
+      audioPlayer.setAudioSource(
+        ConcatenatingAudioSource(
+          children: songQueue.map((song) => songToAudio(song)).toList(),
+        ),
+      );
+    }
+  }
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -30,6 +41,8 @@ class AudioController extends GetxController {
   }
 
   void playNext() async {
+    if (songQueue.isEmpty) return;
+
     if (isShuffled.value) {
       currentIndex.value = (currentIndex.value + 1) % songQueue.length;
     } else {
@@ -50,6 +63,8 @@ class AudioController extends GetxController {
   }
 
   void playPrevious() async {
+    if (songQueue.isEmpty) return;
+
     if (isShuffled.value) {
       currentIndex.value = (currentIndex.value - 1) % songQueue.length;
     } else {
@@ -76,7 +91,8 @@ class AudioController extends GetxController {
   void addSongtoQueue(Song song) {
     songQueue.clear();
     songQueue.add(song);
-    playSong(0);
+    setAudioSource();
+    audioPlayer.play();
   }
 
   void removeSongFromQueue(int index) {
@@ -101,14 +117,14 @@ class AudioController extends GetxController {
   void AddSongsToQueue(Songs songs) {
     songQueue.clear();
     songQueue.addAll(songs.songs);
-
+    setAudioSource();
     playPause();
   }
 
   void AddPLaylistToQueue(PlaylistWithSongs playlist) {
     songQueue.clear();
     songQueue.addAll(playlist.songs.songs);
-
+    setAudioSource();
     playPause();
   }
 
@@ -132,14 +148,14 @@ class AudioController extends GetxController {
   void AddAlbumToQueue(AlbumWithSongs album) {
     songQueue.clear();
     songQueue.addAll(album.songs.songs);
-
+    setAudioSource();
     playSong(currentIndex.value);
   }
 
   void AddArtistToQueue(ArtistWithSongs artist) {
     songQueue.clear();
     songQueue.addAll(artist.songs.songs);
-
+    setAudioSource();
     playSong(currentIndex.value);
   }
 }

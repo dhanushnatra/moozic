@@ -2,19 +2,17 @@ import 'package:get/get.dart';
 import 'package:moozic/components/audio_controller.dart';
 import 'package:moozic/screens/home.dart';
 import 'package:moozic/screens/music.dart';
-import 'package:moozic/screens/search.dart';
-import 'package:moozic/screens/setttings.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:moozic/screens/search.dart';
+import 'package:moozic/screens/setttings.dart';
 
 class BottomNavController extends GetxController {
   var selectedIndex = 0.obs;
-
-  // List of Screens for Navigation Bar
-  final screens = [HomeScreen(), SearchScreen(), SettingsScreen()];
-
+  var screens = [HomeScreen(), SearchScreen(), SettingsScreen()];
   void changeTab(int index) {
     selectedIndex.value = index;
+    update();
   }
 }
 

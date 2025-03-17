@@ -15,7 +15,7 @@ class _SearchScreenState extends State<SearchScreen>
   final TextEditingController _controller = TextEditingController();
   bool submit = false;
   late TabController _tabController;
-  final AudioController audioController = Get.put(AudioController());
+  final AudioController audioController = Get.find<AudioController>();
   @override
   void initState() {
     super.initState();

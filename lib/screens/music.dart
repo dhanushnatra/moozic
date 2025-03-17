@@ -5,11 +5,12 @@ import 'package:moozic/components/audio_controller.dart';
 
 class MusicScreen extends StatelessWidget {
   MusicScreen({super.key});
+  final AudioController audioController = Get.find<AudioController>();
 
   @override
   Widget build(BuildContext context) {
-    final AudioController audioController = Get.put(AudioController());
-    Song song = audioController.songQueue.first;
+    final Song song =
+        audioController.songQueue[audioController.currentIndex.value];
     return Scaffold(
       body: Center(
         child: Column(
